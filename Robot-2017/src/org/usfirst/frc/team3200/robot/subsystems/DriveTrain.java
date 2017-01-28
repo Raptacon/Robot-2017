@@ -18,10 +18,10 @@ public class DriveTrain extends Subsystem {
 		super("MecanumDrive");
 		
 		drive = new RobotDrive(
-				new CANTalon(RobotMap.TALON_FL),
-				new CANTalon(RobotMap.TALON_BL),
-				new CANTalon(RobotMap.TALON_FR),
-				new CANTalon(RobotMap.TALON_BR)
+					new CANTalon(RobotMap.TALON_FL),
+					new CANTalon(RobotMap.TALON_BL),
+					new CANTalon(RobotMap.TALON_FR),
+					new CANTalon(RobotMap.TALON_BR)
 				);
 		
 		drive.setInvertedMotor(MotorType.kRearRight, true);
