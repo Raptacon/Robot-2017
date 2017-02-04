@@ -5,10 +5,12 @@ import org.opencv.imgproc.Imgproc;
 
 import edu.wpi.cscore.AxisCamera;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.vision.VisionRunner;
 import edu.wpi.first.wpilibj.vision.VisionThread;
 
-public class Vision {
+public class Vision implements PIDSource{
 	
 	private AxisCamera cam1;
 	
@@ -18,18 +20,27 @@ public class Vision {
 	
 	public double centerX;
 	
+	Rect r1;
+	Rect r2;
+	
+	private int width = 480;
+	private int height = 360;
+	
 	VisionRunner.Listener<GripPipeline> listener = (pipeline) -> {
 		if (!pipeline.filterContoursOutput().isEmpty()) {
-            Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
+            r1 = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
+            r2 = Imgproc.boundingRect(pipeline.filterContoursOutput().get(1));
+            
+            
             synchronized (imgLock) {
-                centerX = r.x + (r.width / 2);
+                centerX = r1.x + (r1.width / 2);
             }
         }
 	};
 	
 	public Vision() {
 		cam1 = CameraServer.getInstance().addAxisCamera("Axis Camera 1", "10.32.00.11");
-		cam1.setResolution(480, 360);
+		cam1.setResolution(width, height);
 		
 		thread = new VisionThread(cam1, new GripPipeline(), listener);
 		thread.start();
@@ -37,5 +48,30 @@ public class Vision {
 	
 	public boolean cameraFound() {
 		return cam1.isConnected();
+	}
+	
+	public double getSetPoint(){
+		return width/2;
+	}
+	
+	public int getHeight(){
+		return height;
+	}
+
+	@Override
+	public void setPIDSourceType(PIDSourceType pidSource) {
+		
+		
+	}
+
+	@Override
+	public PIDSourceType getPIDSourceType() {
+		// TODO Auto-generated method stub
+		return PIDSourceType.kDisplacement;
+	}
+
+	@Override
+	public double pidGet() {	
+		return (r1.x + r1.width/2 + r2.x + r2.width/2)/2;
 	}
 }

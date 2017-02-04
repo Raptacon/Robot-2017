@@ -8,7 +8,7 @@ public class IMU {
 	private double headingAdj;
 	
 	public IMU() {
-		imu = new I2C(I2C.Port.kOnboard, 0x28);
+		imu = new I2C(I2C.Port.kOnboard, 0x29);
 		
 		//flip y and z axes
 		imu.write(0x42, 0x3);
@@ -17,8 +17,8 @@ public class IMU {
 		imu.write(0x3D, 0x8);
 	}
 	
-	public boolean addressIMU() {
-	    return imu.addressOnly();
+	public double address() {
+	    return readAddressByte(0x00);
 	}
 	
 	public void reset() {
@@ -26,17 +26,23 @@ public class IMU {
 	    imu.write(0x3D, 0x8);
 	}
 	
-	private double readAddress(int address) {
+	private byte readAddressByte(int address) {
+		byte[] buffer = new byte[1];
+		imu.read(address, 1, buffer);
+		return buffer[0];
+	}
+	
+	private short readAddressShort(int address) {
 		byte[] buffer = new byte[2];
 		imu.read(address, 2, buffer);
 		short low = (short)(buffer[0] & 0xFF);
 		short high = (short)((buffer[1] << 8) & 0xFF00);
-		return (double) (low | high);
+		return (short) (low | high);
 	}
 	
 	public double getHeading() {
 		//1 degree per 16 raw
-		return readAddress(0x1A) / 16;
+		return readAddressShort(0x1A) / 16.0;
 	}
 	
 	public void updateHeadingAdj() {
@@ -54,19 +60,19 @@ public class IMU {
 	}
 	
 	public double getRoll() {
-		return readAddress(0x1C) / 16;
+		return readAddressShort(0x1C) / 16.0;
 	}
 	
 	public double getPitch() {
-		return readAddress(0x1E) / 16;
+		return readAddressShort(0x1E) / 16.0;
 	} 
 	
 	public double getAccelX() {
 		//1 meter per second squared per 100 raw
-		return readAddress(0x28) / 100;
+		return readAddressShort(0x28) / 100.0;
 	}
 	
 	public double getAccelY() {
-		return readAddress(0x2A) / 100;
+		return readAddressShort(0x2A) / 100.0;
 	}
 }
