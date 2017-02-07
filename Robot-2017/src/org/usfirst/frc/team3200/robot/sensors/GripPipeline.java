@@ -1,4 +1,5 @@
 package org.usfirst.frc.team3200.robot.sensors;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +14,6 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
-import edu.wpi.first.wpilibj.vision.VisionPipeline;
-
 /**
 * GripPipeline class.
 *
@@ -22,12 +21,12 @@ import edu.wpi.first.wpilibj.vision.VisionPipeline;
 *
 * @author GRIP
 */
-public class GripPipeline implements VisionPipeline {
+public class GripPipeline {
 
 	//Outputs
 	private Mat resizeImageOutput = new Mat();
 	private Mat blurOutput = new Mat();
-	private Mat hsvThresholdOutput = new Mat();
+	private Mat rgbThresholdOutput = new Mat();
 	private ArrayList<MatOfPoint> findContoursOutput = new ArrayList<MatOfPoint>();
 	private ArrayList<MatOfPoint> filterContoursOutput = new ArrayList<MatOfPoint>();
 	private ArrayList<MatOfPoint> convexHullsOutput = new ArrayList<MatOfPoint>();
@@ -50,18 +49,18 @@ public class GripPipeline implements VisionPipeline {
 		// Step Blur0:
 		Mat blurInput = resizeImageOutput;
 		BlurType blurType = BlurType.get("Median Filter");
-		double blurRadius = 1.8018018018018056;
+		double blurRadius = 1.8018018018018018;
 		blur(blurInput, blurType, blurRadius, blurOutput);
 
-		// Step HSV_Threshold0:
-		Mat hsvThresholdInput = blurOutput;
-		double[] hsvThresholdHue = {40.71454700646265, 90.20368942104666};
-		double[] hsvThresholdSaturation = {148.87005649717514, 255.0};
-		double[] hsvThresholdValue = {208.67805755395685, 255.0};
-		hsvThreshold(hsvThresholdInput, hsvThresholdHue, hsvThresholdSaturation, hsvThresholdValue, hsvThresholdOutput);
+		// Step RGB_Threshold0:
+		Mat rgbThresholdInput = blurOutput;
+		double[] rgbThresholdRed = {0.0, 128.35858585858585};
+		double[] rgbThresholdGreen = {153.64208633093526, 255.0};
+		double[] rgbThresholdBlue = {0.0, 255.0};
+		rgbThreshold(rgbThresholdInput, rgbThresholdRed, rgbThresholdGreen, rgbThresholdBlue, rgbThresholdOutput);
 
 		// Step Find_Contours0:
-		Mat findContoursInput = hsvThresholdOutput;
+		Mat findContoursInput = rgbThresholdOutput;
 		boolean findContoursExternalOnly = false;
 		findContours(findContoursInput, findContoursExternalOnly, findContoursOutput);
 
@@ -73,7 +72,7 @@ public class GripPipeline implements VisionPipeline {
 		double filterContoursMaxWidth = 150.0;
 		double filterContoursMinHeight = 0.0;
 		double filterContoursMaxHeight = 250.0;
-		double[] filterContoursSolidity = {75, 100};
+		double[] filterContoursSolidity = {74.64028776978418, 100};
 		double filterContoursMaxVertices = 10000.0;
 		double filterContoursMinVertices = 0.0;
 		double filterContoursMinRatio = 0.0;
@@ -103,11 +102,11 @@ public class GripPipeline implements VisionPipeline {
 	}
 
 	/**
-	 * This method is a generated getter for the output of a HSV_Threshold.
-	 * @return Mat output from HSV_Threshold.
+	 * This method is a generated getter for the output of a RGB_Threshold.
+	 * @return Mat output from RGB_Threshold.
 	 */
-	public Mat hsvThresholdOutput() {
-		return hsvThresholdOutput;
+	public Mat rgbThresholdOutput() {
+		return rgbThresholdOutput;
 	}
 
 	/**
@@ -214,19 +213,18 @@ public class GripPipeline implements VisionPipeline {
 	}
 
 	/**
-	 * Segment an image based on hue, saturation, and value ranges.
-	 *
-	 * @param input The image on which to perform the HSL threshold.
-	 * @param hue The min and max hue
-	 * @param sat The min and max saturation
-	 * @param val The min and max value
+	 * Segment an image based on color ranges.
+	 * @param input The image on which to perform the RGB threshold.
+	 * @param red The min and max red.
+	 * @param green The min and max green.
+	 * @param blue The min and max blue.
 	 * @param output The image in which to store the output.
 	 */
-	private void hsvThreshold(Mat input, double[] hue, double[] sat, double[] val,
-	    Mat out) {
-		Imgproc.cvtColor(input, out, Imgproc.COLOR_BGR2HSV);
-		Core.inRange(out, new Scalar(hue[0], sat[0], val[0]),
-			new Scalar(hue[1], sat[1], val[1]), out);
+	private void rgbThreshold(Mat input, double[] red, double[] green, double[] blue,
+		Mat out) {
+		Imgproc.cvtColor(input, out, Imgproc.COLOR_BGR2RGB);
+		Core.inRange(out, new Scalar(red[0], green[0], blue[0]),
+			new Scalar(red[1], green[1], blue[1]), out);
 	}
 
 	/**
@@ -327,3 +325,4 @@ public class GripPipeline implements VisionPipeline {
 
 
 }
+
