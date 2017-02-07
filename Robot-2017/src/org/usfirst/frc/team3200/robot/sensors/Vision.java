@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.vision.VisionRunner;
 import edu.wpi.first.wpilibj.vision.VisionThread;
 
-public class Vision implements PIDSource{
+public class Vision implements PIDSource,  VisionRunner.Listener<GripPipeline>{
 	
 	private AxisCamera cam1;
 	
@@ -26,23 +26,12 @@ public class Vision implements PIDSource{
 	private int width = 480;
 	private int height = 360;
 	
-	VisionRunner.Listener<GripPipeline> listener = (pipeline) -> {
-		if (!pipeline.filterContoursOutput().isEmpty()) {
-            r1 = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
-            r2 = Imgproc.boundingRect(pipeline.filterContoursOutput().get(1));
-            
-            
-            synchronized (imgLock) {
-                centerX = r1.x + (r1.width / 2);
-            }
-        }
-	};
 	
 	public Vision() {
 		cam1 = CameraServer.getInstance().addAxisCamera("Axis Camera 1", "10.32.00.11");
 		cam1.setResolution(width, height);
 		
-		thread = new VisionThread(cam1, new GripPipeline(), listener);
+		thread = new VisionThread(cam1, new GripPipeline(), this);
 		thread.start();
 	}
 	
@@ -89,5 +78,19 @@ public class Vision implements PIDSource{
 	@Override
 	public double pidGet() {	
 		return (r1.x + r1.width/2 + r2.x + r2.width/2)/2;
+	}
+
+	@Override
+	public void copyPipelineOutputs(GripPipeline pipeline) {
+		if (!pipeline.filterContoursOutput().isEmpty()) {
+            r1 = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
+            r2 = Imgproc.boundingRect(pipeline.filterContoursOutput().get(1));
+            
+            
+            synchronized (imgLock) {
+                centerX = r1.x + (r1.width / 2);
+            }
+        }
+		
 	}
 }
