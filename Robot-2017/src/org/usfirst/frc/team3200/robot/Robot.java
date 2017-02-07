@@ -1,14 +1,12 @@
 
 package org.usfirst.frc.team3200.robot;
 
+import org.usfirst.frc.team3200.robot.sensors.IMU;
 import org.usfirst.frc.team3200.robot.sensors.GripPipeline;
-import org.usfirst.frc.team3200.robot.sensors.Vision;
 import org.usfirst.frc.team3200.robot.subsystems.DriveTrain;
 
-import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -23,8 +21,7 @@ public class Robot extends IterativeRobot {
 
 	public static DriveTrain drive;
 	
-	public static Gyro gyro;
-	public static Vision vision;
+	public static IMU imu;
 	
 	public static OI oi;
 	
@@ -33,8 +30,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		drive = new DriveTrain();
 		
-		gyro = new AnalogGyro(0);
-		vision = new Vision();
+		imu = new IMU();
 		
 		oi = new OI();
 		
@@ -54,21 +50,22 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousPeriodic() {
+		imu.updateHeadingAdj();
 		
 		Scheduler.getInstance().run();
 	}
 
 	public void teleopInit() {
-		
+
 	}
 
 	public void teleopPeriodic() {
-		synchronized(vision.imgLock) {
-			SmartDashboard.putNumber("Rectangle at", vision.centerX);
-		}
+		imu.updateHeadingAdj();
 		
-		SmartDashboard.putNumber("Heading", gyro.getAngle());	
-		SmartDashboard.putBoolean("Camera Found:", vision.cameraFound());
+		SmartDashboard.putBoolean("IMU found:", !imu.addressIMU());
+		SmartDashboard.putNumber("Heading", imu.getHeading());
+		SmartDashboard.putNumber("Heading Adjusted", imu.getHeadingAdj());
+		
 		Scheduler.getInstance().run();
 	}
 
