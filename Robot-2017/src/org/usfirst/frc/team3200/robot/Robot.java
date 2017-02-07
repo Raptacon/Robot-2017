@@ -1,16 +1,19 @@
 
 package org.usfirst.frc.team3200.robot;
 
-import org.usfirst.frc.team3200.robot.sensors.GripPipeline;
+import org.usfirst.frc.team3200.robot.sensors.Encoders;
+import org.usfirst.frc.team3200.robot.sensors.Gyro;
+import org.usfirst.frc.team3200.robot.sensors.IMU;
 import org.usfirst.frc.team3200.robot.sensors.Vision;
 import org.usfirst.frc.team3200.robot.subsystems.DriveTrain;
 
-import edu.wpi.first.wpilibj.AnalogGyro;
+import com.ctre.CANTalon;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -22,23 +25,22 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 
 	public static DriveTrain drive;
-	
+	public static CANTalon PIDTalon;
 	public static Gyro gyro;
+	public static IMU imu;
 	public static Vision vision;
+	public static Encoders encoders;
 	
 	public static OI oi;
-	
-	GripPipeline Grip;
 
 	public void robotInit() {
 		drive = new DriveTrain();
 		
-		gyro = new AnalogGyro(0);
+		gyro = new Gyro();
+		imu = new IMU();
 		vision = new Vision();
 		
 		oi = new OI();
-		
-		Grip = new GripPipeline();
 	}
 
 	public void disabledInit() {
@@ -63,12 +65,15 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopPeriodic() {
-		synchronized(vision.imgLock) {
-			SmartDashboard.putNumber("Rectangle at", vision.centerX);
-		}
 		
-		SmartDashboard.putNumber("Heading", gyro.getAngle());	
+		SmartDashboard.putNumber("Rectangle 1 at", vision.getXposR1());
+		SmartDashboard.putNumber("Rectangle 2 at", vision.getXposR2());
+		
+		SmartDashboard.putNumber("Gyro Heading", gyro.getHeading());
 		SmartDashboard.putBoolean("Camera Found:", vision.cameraFound());
+		SmartDashboard.putNumber("IMU Address:", imu.address());
+		SmartDashboard.putNumber("IMU Heading:", imu.getHeading());
+		SmartDashboard.putNumber("IMU Heading Adjusted:", imu.getHeadingAdj());
 		Scheduler.getInstance().run();
 	}
 

@@ -26,7 +26,7 @@ public class MecanumDriveControlled extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-		double speedY = controller.getRawAxis(RobotMap.LEFT_STICK_Y) * 0.6;
+		double speedY  = -controller.getRawAxis(RobotMap.LEFT_STICK_Y) * 0.6;
 		double speedX = controller.getRawAxis(RobotMap.LEFT_STICK_X) * 0.6;
 		double rot    = controller.getRawAxis(RobotMap.RIGHT_STICK_X) * 0.6;
 		
