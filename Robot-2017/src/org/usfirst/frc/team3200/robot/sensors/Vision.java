@@ -20,8 +20,8 @@ public class Vision implements PIDSource{
 	
 	public double centerX;
 	
-	Rect r1;
-	Rect r2;
+	public Rect r1;
+	public Rect r2;
 	
 	private int width = 480;
 	private int height = 360;
@@ -44,6 +44,22 @@ public class Vision implements PIDSource{
 		
 		thread = new VisionThread(cam1, new GripPipeline(), listener);
 		thread.start();
+	}
+	
+	public double getXposR1(){
+		if(r1!=null){
+			return r1.x;
+		} else {
+			return -1;
+		}
+	}
+	
+	public double getXposR2(){
+		if(r2!=null){
+			return r2.x;
+		} else {
+			return -1;
+		}
 	}
 	
 	public boolean cameraFound() {

@@ -54,6 +54,7 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 	@Override
 	public void pidWrite(double output) {
         setMecanum(0, 0, output);
+        System.out.println(output);
     }
 }
 

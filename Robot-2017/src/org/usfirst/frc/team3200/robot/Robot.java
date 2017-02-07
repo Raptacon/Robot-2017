@@ -65,9 +65,9 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopPeriodic() {
-		synchronized(vision.imgLock) {
-			SmartDashboard.putNumber("Rectangle at", vision.centerX);
-		}
+		
+		SmartDashboard.putNumber("Rectangle 1 at", vision.getXposR1());
+		SmartDashboard.putNumber("Rectangle 2 at", vision.getXposR2());
 		
 		SmartDashboard.putNumber("Gyro Heading", gyro.getHeading());
 		SmartDashboard.putBoolean("Camera Found:", vision.cameraFound());
