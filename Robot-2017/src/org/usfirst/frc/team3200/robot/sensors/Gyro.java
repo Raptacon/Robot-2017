@@ -8,23 +8,23 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 
 public class Gyro implements PIDSource {
 	private AnalogGyro gyro;
-	
+
 	public Gyro() {
 		gyro = new AnalogGyro(RobotMap.GYRO);
 		gyro.setSensitivity(0.007);
 	}
-	
+
 	public double getHeading() {
 		return gyro.getAngle();
 	}
-	
+
 	public void reset() {
 		gyro.reset();
 	}
 
 	@Override
 	public void setPIDSourceType(PIDSourceType pidSource) {
-		
+
 	}
 
 	@Override
@@ -35,7 +35,6 @@ public class Gyro implements PIDSource {
 
 	@Override
 	public double pidGet() {
-		// TODO Auto-generated method stub
 		return getHeading();
 	}
 }
