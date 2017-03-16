@@ -38,6 +38,7 @@ public class Shooter extends Subsystem {
 	
 	public void setShooter(double speed) {
 		shooter.setSetpoint(speed);
+		shooter.enable();
 	    //shooter.set(speed);
 		
 	}

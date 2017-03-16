@@ -25,6 +25,8 @@ public class GearPlace extends Command {
         pid.setAbsoluteTolerance(2);
         SmartDashboard.putData("Gear Place PID", pid);
         this.autoStop = autoStop;
+        
+        setTimeout(3);
     }
 
     // Called just before this Command runs the first time
@@ -43,7 +45,11 @@ public class GearPlace extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false; //autoStop && Robot.lidar.getGearDistance() < 0.25;
+        if(autoStop) {
+            return isTimedOut();
+        } else {
+            return false;
+        }
     }
 
     // Called once after isFinished returns true

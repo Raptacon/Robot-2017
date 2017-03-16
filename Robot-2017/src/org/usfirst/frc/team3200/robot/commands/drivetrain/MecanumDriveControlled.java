@@ -35,7 +35,7 @@ public class MecanumDriveControlled extends Command {
         // pressed or 0 if not
         double turbo = controller.getRawAxis(RobotMap.RIGHT_TRIGGER);
 
-        speedX = speedX * (1 + turbo * 0.66);
+        speedX = speedX * (1 + turbo * 0.66) * 0.8;
         speedY = speedY * (1 + turbo * 0.66);
 
         if (Math.abs(speedX) <= 0.1) {

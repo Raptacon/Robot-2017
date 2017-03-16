@@ -16,6 +16,7 @@ import org.usfirst.frc.team3200.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team3200.robot.subsystems.Shooter;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -39,9 +40,11 @@ public class Robot extends IterativeRobot {
     public static Collector collector;
 
     public static IMU imu;
-    //public static Lidar lidar;
+    public static Lidar lidar;
     public static GearVision gearVision;
     public static ShooterVision shooterVision;
+    
+    public static PowerDistributionPanel pdp;
 
     public static OI oi;
     
@@ -63,6 +66,9 @@ public class Robot extends IterativeRobot {
         shooterVision = new ShooterVision();
         lights = new Lights();
         //lidar = new Lidar();
+        
+        pdp = new PowerDistributionPanel();
+        SmartDashboard.putData("Power Distribution", pdp);
 
         oi = new OI();
 
@@ -90,6 +96,8 @@ public class Robot extends IterativeRobot {
     }
 
     public void autonomousInit() {
+        
+        driveTrain.resetEncoders();
         autoCommand = (CommandGroup) autoChooser.getSelected();
         autoCommand.start();
     }
@@ -133,6 +141,8 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putNumber("Shooter Speed", shooter.getShooterSpeed());
         
         SmartDashboard.putBoolean("Brake Enabled", brakes.get());
+        
+        pdp.updateTable();
         
         //SmartDashboard.putNumber("Lidar 1", lidar.getGearDistance());
         //SmartDashboard.putNumber("Lidar 2", lidar.getShooterDistance());

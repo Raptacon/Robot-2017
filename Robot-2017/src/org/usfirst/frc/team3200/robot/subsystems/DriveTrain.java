@@ -57,16 +57,16 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public double getDistance() {
-//		SmartDashboard.putNumber("Front Right Encoder Count:", talonFR.getPosition());
-//		SmartDashboard.putNumber("Back Right Encoder Count:", talonBR.getPosition());
-//		SmartDashboard.putNumber("Front Left Encoder Count:", talonFL.getPosition());
-//		SmartDashboard.putNumber("Back Left Encoder Count:", talonBL.getPosition());
+		SmartDashboard.putNumber("Front Right Encoder Count:", talonFR.getPosition());
+		SmartDashboard.putNumber("Back Right Encoder Count:", talonBR.getPosition());
+		SmartDashboard.putNumber("Front Left Encoder Count:", talonFL.getPosition());
+		SmartDashboard.putNumber("Back Left Encoder Count:", talonBL.getPosition());
 	    
-		return (//talonFR.getPosition() + 
-				//talonBR.getPosition() + 
-				talonFL.getPosition()
-				//talonBL.getPosition()
-				) / 900;
+		return (talonFR.getPosition() + 
+				talonBR.getPosition() + 
+				//talonFL.getPosition()
+				talonBL.getPosition()
+				) / 3 / 900;
 	}
 	
 	public void resetEncoders() {

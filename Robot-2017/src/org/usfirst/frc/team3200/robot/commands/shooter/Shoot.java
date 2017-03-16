@@ -36,11 +36,11 @@ public class Shoot extends Command {
     	currentTime = System.currentTimeMillis();
     	if(currentTime - startTime < 500) {
     		Robot.shooter.setShooter(SmartDashboard.getNumber("Shooter Speed:", speed));
-    		Robot.shooter.setAgitator(-0.5);
+    		Robot.shooter.setAgitator(-0.3);
     	} else {
     		Robot.shooter.setShooter(SmartDashboard.getNumber("Shooter Speed:", speed));
     		Robot.shooter.setLoader(SmartDashboard.getNumber("Loader Speed:", speed));
-    		Robot.shooter.setAgitator(-0.5);
+    		Robot.shooter.setAgitator(-0.3);
     	}
     }
 

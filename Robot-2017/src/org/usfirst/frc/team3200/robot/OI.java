@@ -24,6 +24,7 @@ public class OI {
     public Button brakeButton;
     public Button shootButton;
     public Button headingSetButton;
+    public Button climbButton;
 
     public OI() {
         shootAlignButton = new JoystickButton(CONTROLLER_1, RobotMap.BUTTON_X);
@@ -31,12 +32,14 @@ public class OI {
         brakeButton = new JoystickButton(CONTROLLER_1, RobotMap.BUTTON_B);
         shootButton = new JoystickButton(CONTROLLER_2, RobotMap.RIGHT_BUMPER);
         headingSetButton = new JoystickButton(CONTROLLER_1, RobotMap.BUTTON_START);
+       
 
         gearPlaceButton.toggleWhenPressed(new ShooterAlign());
         shootAlignButton.toggleWhenPressed(new GearPlace(false));
         shootButton.whileHeld(new Shoot(.6));
         headingSetButton.whenPressed(new SetHeading(0));
         brakeButton.whenPressed(new ToggleBrake());
+        
 
         SmartDashboard.putData("IMU TEST: Rotate 90 Degrees", new RotatePID(90));
         SmartDashboard.putData("ENCODER TEST: Drive 5 Feet", new DrivePID(5));

@@ -27,10 +27,10 @@ public class RobotMap {
     // Motor Speed Controllers
     public static final int TALON_FR = 9;
     public static final int TALON_BR = 12;
-    public static final int TALON_FL = 10;
-    public static final int TALON_BL = 11;
+    public static final int TALON_FL = 11;
+    public static final int TALON_BL = 10;
 
-    public static final int TALON_LIFTER1 = 12;
+    public static final int TALON_LIFTER1 = 14;
     public static final int TALON_LIFTER2 = 13;
 
     public static final int TALON_LOADER = 20;
@@ -52,3 +52,4 @@ public class RobotMap {
     public static final int GEAR_LIGHT = 0;
     public static final int SHOOTER_LIGHT = 1;
 }
+
